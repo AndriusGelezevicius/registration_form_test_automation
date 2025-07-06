@@ -7,10 +7,15 @@ class RegistrationPage:
         self.last_name_field = (By.ID, "lastName")
         self.email_field = (By.ID, "userEmail")
         self.male_radio = (By.ID, "gender-radio-1")
+        self.female_radio = (By.ID, "gender-radio-2")
         self.mobile_nr_field = (By.ID, "userNumber")
         self.calendar_field = (By.ID, "dateOfBirthInput")
         self.subject_field = (By.ID, "subjectsContainer")
-        self.hobbies_checkbox = (By.ID, "hobbies-checkbox-1")
+        self.hobby_checkboxes = {
+            "Sports": (By.ID, "hobby-checkbox-1"),
+            "Reading": (By.ID, "hobby-checkbox-2"),
+            "Music": (By.ID, "hobby-checkbox-3")
+        }
         self.upload_pic_button = (By.ID, "uploadPicture")
         self.current_address_field = (By.ID, "currentAddress")
         self.state_choice = (By.ID, "states")
@@ -29,9 +34,14 @@ class RegistrationPage:
     def enter_email(self, email):
         self.driver.find_element(*self.email_field).send_keys(email)
 
-    def choose_gender_ratio(self):
-        if not self.driver.find_element(*self.male_radio).is_selected():
-            self.driver.find_element(*self.male_radio).click()
+    def choose_gender_ratio(self, gender):
+        if gender == "Male":
+            radio = self.driver.find_element(*self.male_radio)
+        else:
+            radio = self.driver.find_element(*self.female_radio).click()
+
+        if not radio.is_selected():
+            radio.click()
 
     def enter_phone_number(self, mobile_number):
         self.driver.find_element(*self.mobile_nr_field).send_keys(mobile_number)
@@ -42,9 +52,12 @@ class RegistrationPage:
     def enter_subject(self, subject):
         self.driver.find_element(*self.subject_field).send_keys(subject)
 
-    def choose_hobby(self):
-        if not self.driver.find_element(*self.hobbies_checkbox).is_selected():
-            self.driver.find_element(*self.hobbies_checkbox).click()
+    def choose_hobby(self, hobby_name):
+        locator = self.hobby_checkboxes.get(hobby_name) # lygu locator = (By.ID, "hobby-checkbox-1")
+        if locator:
+            checkbox = self.driver.find_element(*locator)
+            if not checkbox.is_selected():
+                checkbox.click()
 
     def upload_photo(self, file_path):
         self.driver.find_element(*self.upload_pic_button).send_keys(file_path)
@@ -58,5 +71,8 @@ class RegistrationPage:
     def choose_city_by_visible_text(self, city):
         self.driver.find_element(*self.city_choice).select_by_visible_text(city)
 
-    def push_submit(self, submit_button):
+    def click_submit(self, submit_button):
         self.driver.find_element(*self.submit_button).select_by_visible_text(submit_button)
+
+    def is_result_table_displayed(self):
+        return self.driver.find_element(By.ID, "example-modal-sizes-title-lg").is_displayed()
