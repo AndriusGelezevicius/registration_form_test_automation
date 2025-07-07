@@ -1,5 +1,6 @@
 import time
 
+from selenium.common import NoSuchElementException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -101,4 +102,7 @@ class RegistrationPage:
         self.driver.find_element(*self.submit_button).click()
 
     def is_result_table_displayed(self):
-        return self.driver.find_element(By.ID, "example-modal-sizes-title-lg").is_displayed()
+        try:
+            return self.driver.find_element(By.ID, "example-modal-sizes-title-lg").is_displayed()
+        except NoSuchElementException:
+            return False
