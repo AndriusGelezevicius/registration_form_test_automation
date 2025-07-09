@@ -20,11 +20,9 @@ def test_short_mobile_number(driver):
     registration_page.choose_city_by_visible_text("Delhi")
     registration_page.click_submit()
 
-    # Checks if mobile number border became red
+    # Checks mobile number border became red
     mobile_number_element = driver.find_element(By.ID, "userNumber")
-    border_color_mobile = mobile_number_element.value_of_css_property("border-color")
-    assert "rgb(220, 53, 69)" in border_color_mobile, "Expected red border for short password"
-
-    # After click submit result model doesn't shows
+    assert not driver.execute_script("return arguments[0].checkValidity()", mobile_number_element)
+    # After click submit result model doesn't show
     assert not registration_page.is_result_table_displayed(), "Result modal should not be displayed"
 

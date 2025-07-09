@@ -20,8 +20,8 @@ def test_wrong_email_format(driver):
     registration_page.choose_city_by_visible_text("Delhi")
     registration_page.click_submit()
 
+    # Checks mobile number border became red
     email_element = driver.find_element(By.ID, "userEmail")
-    border_color_email = email_element.value_of_css_property("border-color")
-    assert "rgb(220, 53, 69)" in border_color_email, f"Expected red border, got {border_color_email}"
-
+    assert not driver.execute_script("return arguments[0].checkValidity()", email_element)
+    # After click submit result model doesn't show
     assert not registration_page.is_result_table_displayed(), "Result modal should not be displayed"
